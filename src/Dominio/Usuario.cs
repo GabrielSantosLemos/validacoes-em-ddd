@@ -11,20 +11,12 @@ namespace Dominio
 
         public Usuario (Nome nome, Email email)
         {
-            if (nome is null)
-                throw new ArgumentNullException("nome");
-            if (email is null)
-                throw new ArgumentNullException("email");
-
             Nome = nome;
             Email = email;
         }
 
         public void AtualizarEmail(Email email)
         {
-            if (email is null)
-                throw new ArgumentNullException("email");
-
             Email = email;
         }
     }

@@ -8,7 +8,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly IEnumerable<Usuario> _usuarioRepository = new Usuario[] { Usuario.Criar("GSL", "gsl@gsl.com").Value };
+        private IEnumerable<Usuario> _usuarioRepository = new Usuario[] { new Usuario(Nome.Criar("GSL").Value, Email.Criar("gsl@gsl.com").Value) };
 
         [HttpPost]
         public IActionResult Inserir([FromBody] UsuarioInputModel input)
@@ -21,7 +21,17 @@ namespace WebAPI.Controllers
             if (nome.IsFailure)
                 ModelState.AddModelError("Nome", nome.Error);
 
+            _usuarioRepository = _usuarioRepository.Append(new Usuario(nome.Value, email.Value));
+
             return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Buscar(int id)
+        {
+            Maybe<Usuario> usuario = _usuarioRepository.First(x => x.Id == id);
+
+            return Ok(usuario);
         }
     }
 }
