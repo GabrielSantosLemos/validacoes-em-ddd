@@ -13,33 +13,13 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Inserir([FromBody] UsuarioInputModel input)
         {
-            bool usuarioExiste = _usuarioRepository.Any(x => x.Email == input.Email);
-            if (usuarioExiste)
-                return BadRequest("E-mail já existente.");
+            Result<Email> email = Email.Criar(input.Email);
+            Result<Nome> nome = Nome.Criar(input.Nome);
 
-            Result<Usuario> criar = Usuario.Criar(input.Nome, input.Email);
-
-            if (criar.IsFailure)
-                return BadRequest(criar.Error);
-
-            return NoContent();
-        }
-
-        [HttpPost("id")]
-        public IActionResult AtualizarEmail(string email, int id)
-        {
-            bool usuarioExiste = _usuarioRepository.Any(x => x.Email == email);
-            if (usuarioExiste)
-                return BadRequest("E-mail já existente.");
-
-            Usuario? usuario = _usuarioRepository.FirstOrDefault(x => x.Id == id);
-            if (usuario is null)
-                return NotFound($"Usuário id: {id} não existe.");
-
-            Result atualizarEmail = usuario.AtualizarEmail(email);
-
-            if (atualizarEmail.IsFailure)
-                return BadRequest(atualizarEmail.Error);
+            if (email.IsFailure)
+                ModelState.AddModelError("Email", email.Error);
+            if (nome.IsFailure)
+                ModelState.AddModelError("Nome", nome.Error);
 
             return NoContent();
         }

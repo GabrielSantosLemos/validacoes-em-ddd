@@ -1,40 +1,86 @@
 ﻿using CSharpFunctionalExtensions;
+using System.Text.RegularExpressions;
 
 namespace Dominio
 {
     public class Usuario
     {
-        private Usuario(string nome, string email)
+        public int Id { get; private set; }
+        public Nome Nome { get; private set; }
+        public Email Email { get; private set; }
+
+        public Usuario (Nome nome, Email email)
         {
+            if (nome is null)
+                throw new ArgumentNullException("nome");
+            if (email is null)
+                throw new ArgumentNullException("email");
+
             Nome = nome;
             Email = email;
         }
 
-        public int Id { get; private set; }
-        public string Nome { get; private set; }
-        public string Email { get; private set; }
-
-        public static Result<Usuario> Criar(string nome, string email)
+        public void AtualizarEmail(Email email)
         {
-            Result validacao = Result.Combine(
-                Result.FailureIf(string.IsNullOrEmpty(nome), "Nome é obrigatório."),
-                Result.FailureIf(string.IsNullOrEmpty(email), "E-Email é obrigatório.")
-            );
+            if (email is null)
+                throw new ArgumentNullException("email");
 
-            return Result.SuccessIf(
-                validacao.IsSuccess,
-                new Usuario(nome, email),
-                validacao.IsFailure ? validacao.Error : String.Empty);
+            Email = email;
+        }
+    }
+
+    public class Email
+    {
+        private readonly string _value;
+
+        private Email(string value)
+        {
+            _value = value;
         }
 
-        public Result AtualizarEmail(string email)
+        public static Result<Email> Criar(string email)
         {
-            return Result.FailureIf(email == email.Split('@')[1], "E-mail inválido.")
-            .Tap(() => 
-            {
-                Email = email;
-            })
-            .Finally(resultado => resultado);
+            if (string.IsNullOrWhiteSpace(email))
+                return Result.Failure<Email>("O e-mail não pode ficar vazio.");
+
+            if (email.Length > 100)
+                return Result.Failure<Email>("O e-mail é muito longo.");
+
+            if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+                return Result.Failure<Email>("E-mail inválido.");
+
+            return Result.Success(new Email(email));
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
+    }
+
+    public class Nome
+    {
+        private readonly string _value;
+
+        private Nome(string value)
+        {
+            _value = value;
+        }
+
+        public static Result<Nome> Criar(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure<Nome>("Name não pode ficar vazio.");
+
+            if (name.Length > 50)
+                return Result.Failure<Nome>("Nome é muito longo.");
+
+            return Result.Success(new Nome(name));
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
         }
     }
 }
