@@ -21,6 +21,9 @@ namespace WebAPI.Controllers
             if (nome.IsFailure)
                 ModelState.AddModelError("Nome", nome.Error);
 
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _usuarioRepository = _usuarioRepository.Append(new Usuario(nome.Value, email.Value));
 
             return NoContent();
@@ -29,7 +32,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Buscar(int id)
         {
-            Maybe<Usuario> usuario = _usuarioRepository.First(x => x.Id == id);
+            Maybe<Usuario?> usuario = _usuarioRepository.FirstOrDefault(x => x.Id == id);
 
             return Ok(usuario);
         }
