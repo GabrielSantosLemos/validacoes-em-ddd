@@ -174,3 +174,5 @@ Dividir o processo de tomada de decisão entre a camada de domínio e os controlad
 - O Teste de Unidade defende isso porque o modelo de domínio puro significa modelo de domínio testável. Sem a separação entre lógica de negócios e comunicação com dependências fora do processo, seus testes serão muito mais difíceis de manter, pois você terá que configurar mocks e stubs e, em seguida, verificar as interações com eles.
 
 Em nosso projeto de exemplo, dividir o processo de tomada de decisão entre a camada de domínio e os controladores significa colocar a verificação de exclusividade de email na classe em UserControllervez da User.
+
+Fonte: https://enterprisecraftsmanship.com/posts/domain-model-purity-completeness/
