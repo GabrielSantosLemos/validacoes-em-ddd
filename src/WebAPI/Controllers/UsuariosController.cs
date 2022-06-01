@@ -13,6 +13,9 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Inserir([FromBody] UsuarioInputModel input)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             Result<Email> email = Email.Criar(input.Email);
             Result<Nome> nome = Nome.Criar(input.Nome);
 
@@ -24,7 +27,9 @@ namespace WebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _usuarioRepository = _usuarioRepository.Append(new Usuario(nome.Value, email.Value));
+            Usuario usuario = new(nome.Value, email.Value);
+
+            _usuarioRepository = _usuarioRepository.Append(usuario);
 
             return NoContent();
         }
