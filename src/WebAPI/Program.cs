@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using WebAPI;
+using WebAPI._Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,19 +22,3 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
-public class ModelStateValidator
-{
-    public static IActionResult ValidateModelState(ActionContext context)
-    {
-        (string fieldName, ModelStateEntry entry) = context.ModelState
-            .First(x => x.Value.Errors.Count > 0);
-        string errorSerialized = entry.Errors.First().ErrorMessage;
-
-        Error error = Error.Deserialize(errorSerialized);
-        //Envelope envelope = Envelope.Error(error, fieldName);
-        var result = new BadRequestObjectResult(/*envelope*/ $"{error}, {fieldName} || gdsfds");
-
-        return result;
-    }
-}

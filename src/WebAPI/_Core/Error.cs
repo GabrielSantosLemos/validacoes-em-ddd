@@ -1,6 +1,6 @@
 ﻿using Dominio;
 
-namespace WebAPI
+namespace WebAPI._Core
 {
     public sealed class Error : ValueObject
     {

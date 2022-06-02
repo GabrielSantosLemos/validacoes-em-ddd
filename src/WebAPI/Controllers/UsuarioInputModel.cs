@@ -15,13 +15,12 @@ namespace WebAPI.Controllers
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EmailAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object value, ValidationContext validationContext)
         {
             if (value == null)
                 return ValidationResult.Success;
-    
-            string email = value as string;
-            if (email == null)
+
+            if (value is not string email)
                 return new ValidationResult("" /*Errors.General.ValueIsInvalid().Serialize()*/);
 
             Result<Email> emailResult = Email.Criar(email);
