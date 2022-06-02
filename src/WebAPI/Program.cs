@@ -1,12 +1,6 @@
-using WebAPI._Core;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.InvalidModelStateResponseFactory = ModelStateValidator.ValidateModelState;
-                });
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

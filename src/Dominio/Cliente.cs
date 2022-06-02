@@ -3,16 +3,19 @@ using System.Text.RegularExpressions;
 
 namespace Dominio
 {
-    public class Usuario
+    public class Cliente
     {
         public int Id { get; private set; }
         public Nome Nome { get; private set; }
         public Email Email { get; private set; }
+        public bool Negativado { get; private set; }
 
-        public Usuario (Nome nome, Email email)
+        public Cliente (Nome nome, Email email, bool negativado = default, int id = default)
         {
+            Id = id;
             Nome = nome;
             Email = email;
+            Negativado = negativado;
         }
 
         public void AtualizarEmail(Email email)
@@ -48,6 +51,11 @@ namespace Dominio
         {
             return _value.GetHashCode();
         }
+
+        public override bool Equals(object? email)
+        {
+            return _value.Equals(email);
+        }
     }
 
     public class Nome
@@ -68,6 +76,52 @@ namespace Dominio
                 return Result.Failure<Nome>("Nome é muito longo.");
 
             return Result.Success(new Nome(name));
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
+    }
+
+    public class Cidade
+    {
+        private readonly string _value;
+
+        private Cidade(string value)
+        {
+            _value = value;
+        }
+
+        public static Result<Cidade> Criar(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure<Cidade>("Name não pode ficar vazio.");
+
+            return Result.Success(new Cidade(name));
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
+    }
+
+    public class Estado
+    {
+        private readonly string _value;
+
+        private Estado(string value)
+        {
+            _value = value;
+        }
+
+        public static Result<Estado> Criar(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure<Estado>("Name não pode ficar vazio.");
+
+            return Result.Success(new Estado(name));
         }
 
         public override int GetHashCode()
