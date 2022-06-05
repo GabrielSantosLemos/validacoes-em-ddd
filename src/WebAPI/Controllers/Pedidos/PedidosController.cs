@@ -11,6 +11,12 @@ namespace WebAPI.Controllers.Pedidos
     public class PedidosController : ControllerBase
     {
         private readonly Context _context = new();
+        private readonly ILogger _logger;
+
+        public PedidosController(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         [HttpPost]
         public IActionResult Inserir([FromBody] InserirPedidoInputModel input)
@@ -19,7 +25,7 @@ namespace WebAPI.Controllers.Pedidos
                 ModelState.AddModelError(nameof(input.ClienteId), "Cliente não existe.");
 
             if (_context.Cliente.Any(x => x.Id == input.ClienteId && x.Negativado))
-                ModelState.AddModelError(nameof(input.ClienteId), "Cliente negativado.");
+                ModelState.AddModelError("", "Cliente negativado.");
 
             Pedido pedido = new(input.ClienteId);
 
