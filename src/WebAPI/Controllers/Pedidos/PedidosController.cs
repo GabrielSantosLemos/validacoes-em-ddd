@@ -11,12 +11,6 @@ namespace WebAPI.Controllers.Pedidos
     public class PedidosController : ControllerBase
     {
         private readonly Context _context = new();
-        private readonly ILogger _logger;
-
-        public PedidosController(ILogger logger)
-        {
-            _logger = logger;
-        }
 
         [HttpPost]
         public IActionResult Inserir([FromBody] InserirPedidoInputModel input)
